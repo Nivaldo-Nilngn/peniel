@@ -3,7 +3,7 @@ import { Item } from '../types/Item';
 import { categories } from '../data/categories';
 import styled from 'styled-components';
 import { newDateAdjusted } from '../helpers/dateFilter';
-import { db } from '../firebaseConfig'; // Importa o Realtime Database
+//import { db } from '../firebaseConfig' Importa o Realtime Database
 import { ref, push } from 'firebase/database'; // Funções para salvar no Realtime Database
 
 type Props = {
