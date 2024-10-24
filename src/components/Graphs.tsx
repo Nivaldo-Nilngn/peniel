@@ -8,10 +8,6 @@ type Props = {
   items: Item[];
 };
 
-const formatDate = (date: Date): string => {
-  return date.toLocaleDateString('pt-BR');
-};
-
 
 const Graphs = ({ items }: Props) => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
