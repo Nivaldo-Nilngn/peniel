@@ -35,25 +35,29 @@ const Graphs = ({ items }: Props) => {
     setSelectedItem(entry.name);
   };
 
-  const filteredItems = selectedItem
-    ? items.filter(item => categories[item.category]?.title === selectedItem)
-    : items;
+  const handleClickOutside = () => {
+    setSelectedItem(null); // Reseta a seleção ao clicar fora
+  };
+
+  const filteredItems = selectedItem 
+    ? items.filter(item => categories[item.category]?.title === selectedItem) 
+    : items; // Mostra todos os itens quando nenhum está selecionado
 
   return (
-    <Container>
+    <Container onClick={handleClickOutside}>
       <h2>Gráficos de Gastos e Entradas</h2>
       
       <GraphsContainer>
         <GraphSection>
           <h3>Entradas</h3>
-          <PieChart width={300} height={300}>
+          <PieChart width={400} height={400}>
             <Pie
               data={incomeData}
               cx="50%"
               cy="50%"
               labelLine={false}
               label={entry => `${entry.name} (${entry.value})`}
-              outerRadius={80}
+              outerRadius={100}  // Ajuste do tamanho
               fill="#8884d8"
               dataKey="value"
               onClick={handleClick}
@@ -69,14 +73,14 @@ const Graphs = ({ items }: Props) => {
 
         <GraphSection>
           <h3>Saídas</h3>
-          <PieChart width={300} height={300}>
+          <PieChart width={400} height={400}>
             <Pie
               data={expenseData}
               cx="50%"
               cy="50%"
               labelLine={false}
               label={entry => `${entry.name} (${entry.value})`}
-              outerRadius={80}
+              outerRadius={100}  // Ajuste do tamanho
               fill="#8884d8"
               dataKey="value"
               onClick={handleClick}
@@ -91,27 +95,29 @@ const Graphs = ({ items }: Props) => {
         </GraphSection>
       </GraphsContainer>
 
-      <TableContainer>
-        <h4>Tabela de Entradas e Saídas</h4>
-        <StyledTable>
-          <thead>
-            <tr>
-              <th>Título</th>
-              <th>Valor</th>
-              <th>Data</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredItems.map((item, index) => (
-              <tr key={index}>
-                <td>{item.title}</td>
-                <td>R$ {item.value}</td>
-                <td>{item.date.toLocaleDateString('pt-BR')}</td>
+      {filteredItems.length > 0 && (
+        <TableContainer>
+          <h4>Valores {selectedItem ? `para: ${selectedItem}` : 'de todos os itens'}</h4>
+          <StyledTable>
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Valor</th>
+                <th>Data</th>
               </tr>
-            ))}
-          </tbody>
-        </StyledTable>
-      </TableContainer>
+            </thead>
+            <tbody>
+              {filteredItems.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.title}</td>
+                  <td>R$ {item.value}</td>
+                  <td>{item.date.toLocaleDateString('pt-BR')}</td>
+                </tr>
+              ))}
+            </tbody>
+          </StyledTable>
+        </TableContainer>
+      )}
     </Container>
   );
 };
@@ -119,28 +125,27 @@ const Graphs = ({ items }: Props) => {
 // Estilização
 const Container = styled.div`
   margin: 20px;
+  text-align: center;  // Centraliza os gráficos
 `;
 
 const GraphsContainer = styled.div`
   display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: center;
+  justify-content: center;  // Centraliza os gráficos no desktop
+  flex-direction: column;   // No mobile, empilha os gráficos
+  @media(min-width: 768px) {
+    flex-direction: row;  // No desktop, exibe os gráficos lado a lado
   }
 `;
 
 const GraphSection = styled.div`
   width: 100%;
-  max-width: 400px;
-  margin-bottom: 20px;
+  max-width: 400px;  // Limita o tamanho máximo do gráfico
+  margin: 20px auto;  // Centraliza os gráficos
   text-align: center;
 `;
 
 const TableContainer = styled.div`
   margin-top: 20px;
-  width: 100%;
 `;
 
 const StyledTable = styled.table`
