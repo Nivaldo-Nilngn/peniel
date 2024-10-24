@@ -1,9 +1,10 @@
+
 import { useState } from 'react';
 import { Item } from '../types/Item';
 import { categories } from '../data/categories';
 import styled from 'styled-components';
 import { newDateAdjusted } from '../helpers/dateFilter';
-//import { db } from '../firebaseConfig' Importa o Realtime Database
+import { db } from '../firebaseConfig'; // Importa o Realtime Database
 import { ref, push } from 'firebase/database'; // Funções para salvar no Realtime Database
 
 type Props = {
@@ -23,10 +24,14 @@ export const InputArea = ({ onAdd }: Props) => {
     try {
       // Referência para onde os dados serão armazenados
       const itemRef = ref(db, 'financialData');
+      
+      // Formata a data no padrão brasileiro
+      const formattedDate = new Date(item.date).toLocaleDateString('pt-BR');
+
       // Cria um novo objeto com a data como string
       const itemWithDate = {
         ...item,
-        date: new Date(item.date).toISOString(), // Se você estiver armazenando no formato ISO
+        date: formattedDate, // Formata a data para o padrão 'dd/MM/yyyy'
       };
       
       // Push para adicionar um novo item
@@ -67,9 +72,7 @@ export const InputArea = ({ onAdd }: Props) => {
       saveToRealtimeDatabase(newItem); // Salva no Realtime Database
       clearFields();
     }
-};
-
-
+  };
 
   const clearFields = () => {
     setDateField('');
@@ -162,3 +165,4 @@ const Button = styled.button`
         color: white;
     }
 `;
+
