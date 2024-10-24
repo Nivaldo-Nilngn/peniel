@@ -8,7 +8,6 @@ type Props = {
   items: Item[];
 };
 
-
 const Graphs = ({ items }: Props) => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
@@ -36,9 +35,9 @@ const Graphs = ({ items }: Props) => {
     setSelectedItem(entry.name);
   };
 
-  const filteredItems = selectedItem 
-    ? items.filter(item => categories[item.category]?.title === selectedItem) 
-    : [];
+  const filteredItems = selectedItem
+    ? items.filter(item => categories[item.category]?.title === selectedItem)
+    : items;
 
   return (
     <Container>
@@ -47,11 +46,11 @@ const Graphs = ({ items }: Props) => {
       <GraphsContainer>
         <GraphSection>
           <h3>Entradas</h3>
-          <PieChart width={400} height={400}>
+          <PieChart width={300} height={300}>
             <Pie
               data={incomeData}
-              cx={200}
-              cy={200}
+              cx="50%"
+              cy="50%"
               labelLine={false}
               label={entry => `${entry.name} (${entry.value})`}
               outerRadius={80}
@@ -70,11 +69,11 @@ const Graphs = ({ items }: Props) => {
 
         <GraphSection>
           <h3>Saídas</h3>
-          <PieChart width={400} height={400}>
+          <PieChart width={300} height={300}>
             <Pie
               data={expenseData}
-              cx={200}
-              cy={200}
+              cx="50%"
+              cy="50%"
               labelLine={false}
               label={entry => `${entry.name} (${entry.value})`}
               outerRadius={80}
@@ -92,29 +91,27 @@ const Graphs = ({ items }: Props) => {
         </GraphSection>
       </GraphsContainer>
 
-      {selectedItem && (
-        <TableContainer>
-          <h4>Valores para: {selectedItem}</h4>
-          <StyledTable>
-            <thead>
-              <tr>
-                <th>Título</th>
-                <th>Valor</th>
-                <th>Data</th>
+      <TableContainer>
+        <h4>Tabela de Entradas e Saídas</h4>
+        <StyledTable>
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Valor</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredItems.map((item, index) => (
+              <tr key={index}>
+                <td>{item.title}</td>
+                <td>R$ {item.value}</td>
+                <td>{item.date.toLocaleDateString('pt-BR')}</td>
               </tr>
-            </thead>
-            <tbody>
-              {filteredItems.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.title}</td>
-                  <td>R$ {item.value}</td>
-                  <td>{item.date.toLocaleDateString('pt-BR')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </StyledTable>
-        </TableContainer>
-      )}
+            ))}
+          </tbody>
+        </StyledTable>
+      </TableContainer>
     </Container>
   );
 };
@@ -127,15 +124,23 @@ const Container = styled.div`
 const GraphsContainer = styled.div`
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const GraphSection = styled.div`
-  width: 45%;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 20px;
   text-align: center;
 `;
 
 const TableContainer = styled.div`
   margin-top: 20px;
+  width: 100%;
 `;
 
 const StyledTable = styled.table`
